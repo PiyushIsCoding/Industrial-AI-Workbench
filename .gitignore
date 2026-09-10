@@ -1,0 +1,22 @@
+.venv/
+models/
+manifest.json
+runtime.json
+sessions.db
+audit.jsonl
+logs/
+sessions/
+kb/
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+
+# packaging
+build/dist/
+build/work/
+src-tauri/target/
+src-tauri/binaries/
+src-tauri/resources/
+src-tauri/gen/
+*.spec.bak
