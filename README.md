@@ -99,20 +99,21 @@ Agent          / Tools         Doc/Ppt/Xlsx
 ### Component Structure
 
 ```text
-app/
-  config.py       paths, limits, agent→capability map
-  manifest.py     installed models + frontmatter enrichment
-  supervisor.py   spawns llama-server, ports, health, reaping
-  router.py       model name → port (capability fallback)
-  llm.py          chat / vision / embed / rerank — the only model client
-  planner.py      decides agents, models, cardinality, parallelism, fan-in
-  executor.py     walks the plan; no decisions
-  store.py        conversations, messages, runs (SQLite)
-  audit.py        append-only event log
-  netmon.py       outbound connection counter
-  server.py       FastAPI
-  agents/         vision, kb, code, calc, docx, pptx, xlsx
-  tools/          intake, files, sandbox, docgen, kb
+src/app/
+    config.py       paths, limits, and agent-to-capability map
+    manifest.py     installed models and manifest enrichment
+    supervisor.py   spawns llama-server, ports, health, and reaping
+    router.py       model name to port with capability fallback
+    llm.py          chat, vision, embedding, and reranking model client
+    planner.py      decides agents, models, cardinality, parallelism, and fan-in
+    executor.py     walks the plan without making planning decisions
+    store.py        conversations, messages, and runs in SQLite
+    audit.py        append-only event log
+    netmon.py       outbound connection counter
+    server.py       FastAPI application
+    agents/         vision, RAG, code, calculation, and document agents
+    rag/            knowledge-base indexing and retrieval
+    tools/          intake, files, sandbox, and document generation
 ```
 
 ### How a Request Flows
@@ -131,35 +132,48 @@ Bulk content does not travel between workflow steps. It is written to disk and p
 ## 7. Repository Structure
 
 ```text
-PROJECT/
+workbench-v5/
 ├── README.md
-├── app/
-│   ├── config.py
-│   ├── manifest.py
-│   ├── supervisor.py
-│   ├── router.py
-│   ├── llm.py
-│   ├── planner.py
-│   ├── executor.py
-│   ├── store.py
-│   ├── audit.py
-│   ├── netmon.py
-│   ├── server.py
-│   ├── agents/
-│   └── tools/
-├── hfcli.py
-├── engine.py
-├── smoke.py
-├── run.sh
 ├── requirements.txt
-└── sessions/
+├── assets/
+│   └── screenshots/             prototype screenshots and screenshots README
+├── docs/
+│   └── ARCHITECTURE.md         architecture documentation
+├── src/
+│   ├── backend_main.py
+│   ├── BUILD.md
+│   ├── engine.py
+│   ├── hfcli.py
+│   ├── run.sh
+│   ├── smoke.py
+│   ├── app/                    Python backend package
+│   │   ├── agents/
+│   │   ├── rag/
+│   │   └── tools/
+│   ├── web/                    React/Vite frontend
+│   │   ├── package.json
+│   │   └── src/
+│   ├── src-tauri/              Tauri desktop shell
+│   │   ├── build.rs
+│   │   ├── Cargo.toml
+│   │   ├── tauri.conf.json
+│   │   ├── capabilities/
+│   │   └── src/
+│   └── build/                  packaging and development scripts
+└── submission/
+    ├── DEMO.md
+    ├── PRESENTATION.md
+    └── Orchestra_SIH26_PPT.pdf
 ```
 
 ### What goes where?
 
 | Item | Location |
 |---|---|
-| Source code | `app/` and project root scripts |
+| Backend source code and CLI tools | `src/` and `src/app/` |
+| Desktop application shell | `src/src-tauri/` |
+| Frontend source code | `src/web/` |
+| Build and development scripts | `src/build/` |
 | Architecture / technical documentation | `docs/` |
 | Project screenshots / prototype images | `assets/screenshots/` |
 | Final PPT / presentation | `submission/` |
@@ -168,37 +182,33 @@ PROJECT/
 
 ## 8. Final Presentation
 
-Keep the final SIH presentation in the repository whenever the file size allows it.
-
-See `submission/PRESENTATION.md` for the final presentation.
-
-If the PPT is too large for GitHub, use Google Drive/OneDrive and put the accessible viewer link in `submission/PRESENTATION.md`.
+The final SIH presentation is available in [`submission/Orchestra_SIH26_PPT.pdf`](submission/Orchestra_SIH26_PPT.pdf).
+It covers the problem, proposed solution, architecture, technology stack, feasibility, deployment, impact, and confidentiality considerations.
 
 ## 9. Demo Video
 
-A demo video is optional, but recommended.
+The demo video presents the Industrial AI Workbench, its self-hosted AI architecture, key features, workflow, and working prototype.
 
-Add the YouTube/Google Drive link in `submission/DEMO.md`.
+[Watch the demo video](https://drive.google.com/file/d/1qM05_gpofjU1eaWlxjrlZQPqz6C89zKX/view?usp=sharing)
 
 ## 10. Screenshots / Prototype Photos
 
-Add important screenshots or prototype photos to:
+The repository includes the following prototype screenshots:
 
-```text
-assets/screenshots/
-```
-
-Use clear filenames that identify the feature or workflow shown.
+- **Home:** Main application interface and entry point ([`01-home.png`](assets/screenshots/01-home.png))
+- **Model Download:** Model browsing and download interface ([`02-model-download.png`](assets/screenshots/02-model-download.png))
 
 ## 11. Setup and Run
 
-**Platform:** macOS, Apple Silicon
+**Current packaged platform:** macOS
+
+The application is currently available for macOS. A Windows version is also being built and will be supported in a future release.
 
 Everything is bundled in the application — the interface, backend, and model runtime. No Python, Node.js, or other separate runtime installation is required.
 
 ### 1. Download
 
-[Industrial AI Workbench](https://drive.google.com/file/d/1W7zniF--h7xmELXOxoGbG-80_CCEinws/view?usp=sharing)
+[Industrial AI Workbench](https://drive.google.com/file/d/1W7zniF--h7xmELXOxoGbG-80_CCEinws/view?usp=sharing) (macOS package)
 
 ### 2. Install
 
@@ -227,30 +237,43 @@ At least one text model is required. A vision model can be added for scanned doc
 For development or running the backend directly from source, the following setup can be used:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+python3 -m venv src/.venv
+src/.venv/bin/python -m pip install -r requirements.txt
 ```
 
 A local `llama-server`/llama.cpp installation is required when using the source-based backend workflow.
+
+The backend can be started directly from the repository root with:
+
+```bash
+src/.venv/bin/python -m uvicorn --app-dir src app.server:app --host 127.0.0.1 --port 8000
+```
+
+For the desktop shell and installer, run the scripts from the repository root:
+
+```bash
+bash src/build/dev.sh       # development shell with hot reload
+bash src/build/build.sh     # packaged installer
+```
 
 ## 12. Get Models
 
 Browse available models:
 
 ```bash
-.venv/bin/python hfcli.py browse
+src/.venv/bin/python src/hfcli.py browse
 ```
 
 Pull a model:
 
 ```bash
-.venv/bin/python hfcli.py pull unsloth/Qwen3-VL-2B-Instruct-GGUF
+src/.venv/bin/python src/hfcli.py pull unsloth/Qwen3-VL-2B-Instruct-GGUF
 ```
 
 Enrich the model manifest:
 
 ```bash
-.venv/bin/python engine.py enrich
+src/.venv/bin/python src/engine.py enrich
 ```
 
 At least one text model is required. A vision model can be added for scanned documents, drawings, photographs, and handwriting. An embedding model can be added for the knowledge base.
@@ -260,7 +283,7 @@ At least one text model is required. A vision model can be added for scanned doc
 Run the smoke test:
 
 ```bash
-.venv/bin/python smoke.py
+src/.venv/bin/python src/smoke.py
 ```
 
 The smoke test checks the system layers without mocking the workflow.
@@ -268,7 +291,7 @@ The smoke test checks the system layers without mocking the workflow.
 ## 14. Run
 
 ```bash
-./run.sh
+./src/run.sh
 ```
 
 The application is served locally at:
