@@ -11,7 +11,8 @@ failing the whole plan, we substitute a model with the right
 capability and record the substitution in the audit log.
 """
 
-from . import manifest, supervisor
+from . import supervisor
+from . import manifest
 from .audit import log_event
 
 

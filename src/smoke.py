@@ -16,11 +16,16 @@ import sys
 import uuid
 from pathlib import Path
 
-from app import agents, manifest, planner, supervisor
-from app.netmon import monitor
-from app.rag import index as ragindex, resolver
-from app.tools import docgen, intake, sandbox
-from app.tools.files import outputs_dir, session_dir
+from src.app import agents
+from src.app.netmon import monitor
+from src.app.rag import resolver
+from src.app.tools import sandbox
+from src.app.tools.files import outputs_dir, session_dir
+from src.app import supervisor
+from src.app.rag import index as ragindex
+from src.app.tools import intake
+from src.app import manifest, planner
+from src.app.tools import docgen
 
 PASS, FAIL = "PASS", "FAIL"
 results = []
@@ -72,7 +77,7 @@ def c_supervisor():
 
 
 def c_chat():
-    from app import llm
+    from src.app import llm
     out = llm.chat("Reply with exactly the word: READY", max_tokens=10)
     if "ready" not in out.lower():
         raise RuntimeError(f"unexpected reply: {out[:80]!r}")
@@ -80,7 +85,7 @@ def c_chat():
 
 
 def c_json_mode():
-    from app import llm
+    from src.app import llm
     schema = {
         "type": "object",
         "properties": {"colour": {"type": "string"}, "count": {"type": "integer"}},
@@ -138,7 +143,7 @@ def c_docgen():
 def c_embedding():
     if not manifest.by_capability("embedding"):
         raise RuntimeError("no embedding model installed — KB agent will not work")
-    from app import llm
+    from src.app import llm
     v = llm.embed(["test sentence"])
     return f"{len(v[0])} dimensions"
 
@@ -188,7 +193,7 @@ def c_netmon():
 
 
 def c_audit():
-    from app.audit import log_event, tail
+    from src.app.audit import log_event, tail
     log_event("smoke.test", note="audit check")
     ev = tail(5)
     if not any(e["event"] == "smoke.test" for e in ev):
@@ -198,7 +203,7 @@ def c_audit():
 
 def c_composer():
     """The final pass must present agent content, not a log line."""
-    from app import composer
+    from src.app import composer
     fake = {
         "ok": True,
         "summaries": ["[vision] Read 1 image in 'transcribe' mode, 62 chars."],
@@ -221,7 +226,7 @@ def c_composer():
 
 def c_textcheck():
     """Degenerate output must be caught, not passed on."""
-    from app.textcheck import is_degenerate, strip_repeats
+    from src.app.textcheck import is_degenerate, strip_repeats
     looped = "Extract the text from this image.\n" * 30
     bad, why = is_degenerate(looped)
     if not bad:
@@ -243,7 +248,7 @@ def c_direct():
         raise RuntimeError(
             f"planner built {len(plan['steps'])} step(s) for a greeting: "
             f"{planner.describe(plan)}")
-    from app import composer
+    from src.app import composer
     answer = composer.compose("hi how are you", {}, session_id=sid, direct=True)
     if len(answer) < 5:
         raise RuntimeError("no conversational reply produced")
@@ -252,8 +257,8 @@ def c_direct():
 
 def c_general():
     """General knowledge answering, and correct provenance marking."""
-    from app.agents import get
-    from app.agents.base import AgentInput
+    from src.app.agents import get
+    from src.app.agents.base import AgentInput
     r = get("general").run(AgentInput(
         session_id="smoke_" + uuid.uuid4().hex[:6],
         task="In two sentences, what is water pollution?"))

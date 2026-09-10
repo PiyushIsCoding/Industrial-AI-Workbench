@@ -12,9 +12,9 @@ Self-hosted agentic AI workbench that runs on local open-weight models. The syst
 
 ## 2. Problem Statement
 
-Industrial and technical workflows often require users to work with a wide range of inputs such as documents, scanned PDFs, handwritten notes, engineering drawings, photographs, and structured data. These workflows can require multiple AI capabilities, repeated processing steps, and movement of potentially sensitive information between tools or services.
+Refineries, PSUs, defence-linked manufacturing units and government offices generate a lot of routine but sensitive knowledge work. Approval notes, board presentations, engineering calculations, code for internal tools, review of scanned drawings and inspection reports.
 
-The project addresses this by providing a self-hosted agentic AI workbench that can coordinate multiple specialized capabilities locally, while keeping model traffic on the local machine.
+None of this can go through cloud AI assistants like Claude or Codex because the underlying data is confidential: Piping & Instrument Diagrams, financials, vendor negotiations, unreleased designs, internal correspondence, confidential business strategies etc. Company policy keeps this data on premises, so people either do the work manually resulting in productivity gain, or they quietly paste confidential material into public tools anyway. Open weight large reasoning models have reached a point where a genuinely useful assistant built on them is realistic. But nothing deployable exists today that industrial users can actually work with the way they use Claude or Codex.
 
 ## 3. Proposed Solution
 

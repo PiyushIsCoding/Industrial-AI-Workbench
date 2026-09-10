@@ -25,7 +25,9 @@ from __future__ import annotations
 
 import json
 
-from . import agents, llm, manifest
+from . import agents
+from . import llm
+from . import manifest
 from .audit import log_event
 from .config import (
     AGENT_CAPABILITY, DEFAULT_MAX_PARALLEL, MAX_FANOUT, MAX_PLAN_STEPS,
