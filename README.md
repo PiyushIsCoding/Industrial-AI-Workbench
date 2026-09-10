@@ -10,6 +10,18 @@ Self-hosted agentic AI workbench that runs on local open-weight models. The syst
 - **Category:** Software
 - **Theme:** Smart Automation
 
+ ### Team Info
+
+| Team Member           | Role                                                    |
+| --------------------- | ------------------------------------------------------- |
+| **Suryansh Malhotra** | AI/ML — Model development, complex AI/ML implementation |
+| **Dia Jainn**         | AI/ML — AI/ML implementation and integration            |
+| **Arul Jain**         | AI/ML — AI/ML implementation and supporting tasks       |
+| **Piyush**            | Frontend — UI development and application interface     |
+| **Avani Agnihotri**   | Backend, PPT, Ideation & Demo                           |
+| **Aditi Verma**       | Backend, PPT, Ideation, Demo & Editing                  |
+
+
 ## 2. Problem Statement
 
 Refineries, PSUs, defence-linked manufacturing units and government offices generate a lot of routine but sensitive knowledge work. Approval notes, board presentations, engineering calculations, code for internal tools, review of scanned drawings and inspection reports.
@@ -344,8 +356,3 @@ GET  /api/system/agents
 - Extend the set of supported industrial workflows and specialized agents.
 - Improve deployment and resource management for larger local model workloads.
 
-## Important
-
-Before submission, make sure the repository is accessible to reviewers.
-
-Do **not** upload passwords, API keys, access tokens, `.env` files containing secrets, or other confidential credentials.
