@@ -175,7 +175,7 @@ workbench-v5/
 └── submission/
     ├── DEMO.md
     ├── PRESENTATION.md
-    └── Orchestra_SIH26_PPT.pdf
+    └── Orchestra_26117.pptx
 ```
 
 ### What goes where?
@@ -194,7 +194,7 @@ workbench-v5/
 
 ## 8. Final Presentation
 
-The final SIH presentation is available in [`submission/Orchestra_SIH26_PPT.pdf`](submission/Orchestra_SIH26_PPT.pdf).
+The final SIH presentation is available in [`submission/Orchestra_26117.pptx`](submission/Orchestra_26117.pptx).
 It covers the problem, proposed solution, architecture, technology stack, feasibility, deployment, impact, and confidentiality considerations.
 
 ## 9. Demo Video

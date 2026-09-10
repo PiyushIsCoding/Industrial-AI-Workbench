@@ -4,7 +4,7 @@ The final presentation for **Industrial AI Workbench** is included in this `subm
 
 ### Presentation
 
-[Open the Final Presentation](./Orchestra_SIH26_PPT.pdf )
+[Open the Final Presentation](./Orchestra_26117.pptx)
 
 ## Presentation Contents
 
